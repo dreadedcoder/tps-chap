@@ -1,0 +1,6 @@
+@ChapChap.Api_HostAddress = http://localhost:5012
+
+GET {{ChapChap.Api_HostAddress}}/api/v1/transactions/
+Accept: application/json
+
+###
