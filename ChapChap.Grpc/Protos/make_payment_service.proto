@@ -1,0 +1,24 @@
+syntax = "proto3";
+option csharp_namespace = "ChapChap.Grpc";
+package paymentservice;
+
+
+service MakePayment {
+  rpc CreateTransaction (TransactionRequest) returns (TransactionResponse);
+}
+
+message TransactionRequest {
+  string user_id = 1;
+  string reference_id = 2;
+  string amount = 3; //string representation of decimal amount
+}
+
+message TransactionResponse {
+  Status status = 1;
+  string message = 2;
+
+  enum Status {
+	  SUCCESS = 0;
+	  FAILURE = 1;
+  }
+}

@@ -50,7 +50,7 @@ async ([FromBody] TransactionRequest request, ILogger<Program> logger,
         if (request.Amount <= 0)
             return Results.BadRequest($"{nameof(request.Amount)} should be greater than 0");
 
-        //set up broker and send request to consumer
+        //set up queue and send the request to consumer
         var rabbitMqOptions = massTransitOptions.RabbitMQ ?? 
             throw new ArgumentNullException(nameof(massTransitOptions.RabbitMQ));
 
