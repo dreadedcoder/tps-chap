@@ -3,8 +3,24 @@ using MassTransit;
 
 namespace ChapChap.Api.Extensions
 {
-    public static class MassTransitServiceCollectionExtensions
+    /// <summary>
+    /// Extensions to IServiceCollection to declutter program.cs
+    /// </summary>
+    public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Registers MassTransit services.
+        /// 
+        /// Configures RabbitMQ and the transaction queue (ReceiveEndpoint)
+        /// 
+        /// </summary>
+        /// 
+        /// <param name="services"> The  current <see cref="IServiceCollection"/> instance</param>
+        /// <param name="mtOptions"> The <see cref="MassTransitOptions"/> for configuring the broker </param>
+        /// 
+        /// <returns> <see cref="IServiceCollection"/> for chaining method calls</returns>
+        /// 
+        /// <exception cref="ArgumentNullException"></exception>
         public static IServiceCollection AddMassTransitWithRabbitMQ(
             this IServiceCollection services, MassTransitOptions mtOptions)
         {
