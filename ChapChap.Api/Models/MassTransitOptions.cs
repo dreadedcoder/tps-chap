@@ -1,5 +1,8 @@
 ﻿namespace ChapChap.Api.Models
 {
+    /// <summary>
+    /// MassTransit configuration options
+    /// </summary>
     public class MassTransitOptions
     {
         public RabbitMQ? RabbitMQ { get; set; }
