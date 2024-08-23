@@ -21,7 +21,7 @@ namespace ChapChap.gRPC.Services
             TransactionRequest txnRequest, ServerCallContext callContext)
             => Task.FromResult(new TransactionResponse
             {
-                Message = $"Transaction for {txnRequest.ReferenceId} request processed successfully",
+                Message = $"Transaction withh ReferenceId: {txnRequest.ReferenceId} processed successfully",
                 Status = TransactionResponse.Types.Status.Success
             });
     }

@@ -2,7 +2,7 @@
 namespace ChapChap.Consumers.Data
 {
     /// <summary>
-    /// Class for configuring Mongo Db for the consumers
+    /// Class for configuring Mongo Db for the consumers.
     /// </summary>
     public class MongoConfiguration
     {

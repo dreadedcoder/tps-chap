@@ -4,6 +4,9 @@ using System;
 
 namespace ChapChap.Consumers.Data
 {
+    /// <summary>
+    /// The Mongo db entity
+    /// </summary>
     public class Transaction
     {
         [BsonId]

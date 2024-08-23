@@ -9,13 +9,13 @@ namespace ChapChap.Consumers.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Configures MongoDb, adds <see cref="TransactionRepository"/> and <see cref="PaymentClient"/>
+        /// Configures MongoDb, adds <see cref="TransactionRepository"/> and <see cref="PaymentClient"/>.
         /// </summary>
         /// 
-        /// <param name="services"> The <see cref="IServiceCollection"/> instance </param>
-        /// <param name="mongoConfig"> The mongo db configuration options </param>
+        /// <param name="services"> The <see cref="IServiceCollection"/> instance. </param>
+        /// <param name="mongoConfig"> The mongo db configuration options. </param>
         /// 
-        /// <returns>The <see cref="IServiceCollection"/> for chaining calls</returns>
+        /// <returns>The <see cref="IServiceCollection"/> for chaining calls. </returns>
         public static IServiceCollection AddConsumersServices(this IServiceCollection services,
             ConsumersConfiguration config)
         {
@@ -35,7 +35,8 @@ namespace ChapChap.Consumers.Extensions
                     provider.GetRequiredService<IMongoDatabase>().GetCollection<Transaction>(
                         mongoConfig.TransactionsCollectionName)
                 );
-
+            
+            //add other required services
             services
                 .AddSingleton<TransactionRepository>()
                 .AddSingleton(GrpcChannel.ForAddress(config.ChannelAddress))

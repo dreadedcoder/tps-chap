@@ -4,6 +4,7 @@ using ChapChap.Api.Extensions;
 using MassTransit;
 using ChapChap.Consumers;
 using ChapChap.Consumers.Extensions;
+using ChapChap.Consumers.Messages;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,14 +64,20 @@ async ([FromBody] TransactionRequest request, ILogger<Program> logger,
         var address = $"{rabbitMqOptions.Host}/{rabbitMqOptions.TransactionQueue}";
 
         var endpoint = await massTransitBus.GetSendEndpoint(new Uri(address));
-        await endpoint.Send(request);
+
+        await endpoint.Send(new PaymentMessage
+        {
+            Amount = request.Amount,
+            ReferenceId = request.ReferenceId,
+            UserId = request.UserId
+        });
 
         return Results.Ok("Transaction request queued for processing");                                                                                 
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "An error occured while processing the request with {ReferenceId} and {UserId}",
-            request.ReferenceId, request.UserId);
+        logger.LogError(ex, "An error occured while processing the request with ReferenceId {ReferenceId} " +
+            "and UserId {UserId}",request.ReferenceId, request.UserId);
 
         return Results.StatusCode(504);
     }

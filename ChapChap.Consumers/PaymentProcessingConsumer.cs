@@ -11,7 +11,7 @@ using System;
 namespace ChapChap.Consumers
 {
     /// <summary>
-    /// 
+    /// The MassTransit consumer that processes the payment message (command)
     /// </summary>
     public class PaymentProcessingConsumer : IConsumer<PaymentMessage>
     {
@@ -29,7 +29,7 @@ namespace ChapChap.Consumers
         }
 
         /// <summary>
-        /// 
+        /// Receives the message and calls the gRPC service
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
@@ -37,20 +37,26 @@ namespace ChapChap.Consumers
         {
             try
             {
-                var resoponse = await _paymentClient.CreatePaymentTransaction(new TransactionRequest
+                _logger.LogInformation("Consumr received PaymentMessage for ReferenceId {ReferenceId}",
+                    context.Message.ReferenceId);
+
+                var response = await _paymentClient.CreatePaymentTransaction(new TransactionRequest
                 {
                     Amount = context.Message.Amount.ToString(CultureInfo.InvariantCulture),
                     ReferenceId = context.Message.ReferenceId.ToString(),
                     UserId = context.Message.UserId.ToString()
                 });
 
+                _logger.LogInformation("gRPC response {@response} for ReferenceId {ReferenceId}",
+                    response, context.Message.ReferenceId);
+
                 await _txnRepository.AddTransactionAsync(new Transaction
                 {
                     Amount = context.Message.Amount,
-                    Message = resoponse.Message,
+                    Message = response.Message,
                     ReferenceId = context.Message.ReferenceId,
                     UserId = context.Message.UserId,
-                    Status = resoponse.Status.ToString(),
+                    Status = response.Status.ToString(),
                     
                 });
 
