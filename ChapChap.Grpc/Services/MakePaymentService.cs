@@ -1,18 +1,14 @@
 ﻿using Grpc.Core;
+using ChapChap.Payments;
 
-namespace ChapChap.Grpc.Services
+namespace ChapChap.gRPC.Services
 {
     /// <summary>
     /// The MakePayment Service that processes a request from a gRPC client
     /// </summary>
-    /// 
-    /// <param name="logger"></param>
-    public class MakePaymentService(
-        ILogger<MakePaymentService> logger) : MakePayment.MakePaymentBase
-    {
-        private readonly ILogger<MakePaymentService> _logger = logger;
-           
 
+    public class MakePaymentService : MakePayment.MakePaymentBase
+    {
         /// <summary>
         ///  Always returns a success status and message for every request
         /// </summary>

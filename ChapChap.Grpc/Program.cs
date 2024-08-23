@@ -1,4 +1,4 @@
-using ChapChap.Grpc.Services;
+using ChapChap.gRPC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

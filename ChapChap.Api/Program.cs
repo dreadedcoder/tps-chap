@@ -2,6 +2,8 @@ using ChapChap.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using ChapChap.Api.Extensions;
 using MassTransit;
+using ChapChap.Consumers;
+using ChapChap.Consumers.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,9 +17,13 @@ builder
 var massTransitOptions = new MassTransitOptions();
 builder.Configuration.Bind("MassTransit", massTransitOptions);
 
+var consumersConfig = new ConsumersConfiguration();
+builder.Configuration.Bind("Consumers", consumersConfig);
+
 builder
     .Services
-    .AddMassTransitWithRabbitMQ(massTransitOptions);
+    .AddConsumersServices(consumersConfig)
+    .AddMassTransitConsumersWithRabbitMQ(massTransitOptions);
 
 #endregion
 

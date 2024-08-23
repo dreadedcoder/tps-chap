@@ -1,27 +1,29 @@
-﻿using ChapChap.Api.Models;
-using MassTransit;
+﻿using MassTransit;
+using ChapChap.Api.Models;
+using ChapChap.Consumers;
 
 namespace ChapChap.Api.Extensions
 {
     /// <summary>
-    /// Extensions to IServiceCollection to declutter program.cs
+    /// Extensions to IServiceCollection to declutter program.cs.
     /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Registers MassTransit services.
         /// 
-        /// Configures RabbitMQ and the transaction queue (ReceiveEndpoint)
+        /// Configures RabbitMQ and the transaction queue (ReceiveEndpoint).
         /// 
+        /// Adds the <see cref="PaymentProcessingConsumer"/>.
         /// </summary>
         /// 
-        /// <param name="services"> The  current <see cref="IServiceCollection"/> instance</param>
-        /// <param name="mtOptions"> The <see cref="MassTransitOptions"/> for configuring the broker </param>
+        /// <param name="services"> The  current <see cref="IServiceCollection"/> instance.</param>
+        /// <param name="mtOptions"> The <see cref="MassTransitOptions"/> for configuring the broker. </param>
         /// 
-        /// <returns> <see cref="IServiceCollection"/> for chaining method calls</returns>
+        /// <returns> <see cref="IServiceCollection"/> for chaining method calls.</returns>
         /// 
         /// <exception cref="ArgumentNullException"></exception>
-        public static IServiceCollection AddMassTransitWithRabbitMQ(
+        public static IServiceCollection AddMassTransitConsumersWithRabbitMQ(
             this IServiceCollection services, MassTransitOptions mtOptions)
         {
             if(mtOptions.RabbitMQ == null)
@@ -30,6 +32,7 @@ namespace ChapChap.Api.Extensions
             services
                 .AddMassTransit(conf =>
                 {
+                    conf.AddConsumer<PaymentProcessingConsumer>();
                     conf.UsingRabbitMq((context, cfg) =>
                     {
                         cfg.Host(mtOptions.RabbitMQ.Host, c =>
@@ -40,7 +43,7 @@ namespace ChapChap.Api.Extensions
 
                         cfg.ReceiveEndpoint(mtOptions.RabbitMQ.TransactionQueue, configure =>
                         {
-                            //configure.Consumer<object>(context);
+                            configure.Consumer<PaymentProcessingConsumer>(context);
                         });
                     });
 
