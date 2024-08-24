@@ -67,7 +67,7 @@ namespace ChapChap.Api.UnitTests
             var result = await _transactionRequestService.ProcessTransactionRequestAsync(request);
 
             //assert
-            Assert.IsType<Ok>(result);
+            Assert.IsType<Ok<string>>(result);
             _mockBus.Verify(bus => bus.GetSendEndpoint(It.Is<Uri>(uri =>
                 uri.ToString() == $"{_massTransitOptions.RabbitMQ.Host}/{_massTransitOptions.RabbitMQ.TransactionQueue}"
             )), Times.Once);

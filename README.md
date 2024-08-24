@@ -45,14 +45,7 @@ The system processes transactions by receiving HTTP requests, forwarding them to
 
 ## Build and Run on Windows
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/dreadedcoder/tps-chap.git
-cd ChapChap/
-```
-
-### 2. Set Up RabbitMQ and MongoDB
+### 1. Set Up RabbitMQ and MongoDB
 
 Ensure that RabbitMQ and MongoDB are installed and running on your machine.
 
@@ -79,11 +72,16 @@ Once installed the application will use the default credentials to connect to Ra
 ```username: guest```
 ```password: guest ```
 
-ou can navigate to the RabbitMQ admin portal here: http://localhost:15672/#/
+Navigate to the RabbitMQ admin portal default endpoint: http://localhost:15672/#/
 
-### 3. Build and Run the Application
+### 2. Clone the Repository and cd into the folder
 
-Navigate to these project directories and run the following commands:
+```bash
+git clone https://github.com/dreadedcoder/tps-chap.git
+cd tps-chap/
+```
+
+For each project, open the terminal and run:
 
 #### gRPC Service
 
@@ -94,7 +92,7 @@ dotnet run
 ```
 Ensure the service is running at http://localhost:5062
 #### Minimal API
-
+In another terminal run:
 ```bash
 cd ChapChap.Api
 dotnet build
@@ -103,9 +101,12 @@ dotnet run
 
 Navigate to http://localhost:5012/swagger/index.html for the swagger UI and execute a request. 
 
-The logs will be visible in the ChapChap.Api console window.
+The the request and responses will be visible in the ChapChap.Api terminal window.
 
-You can connect to the running instance of MongoDB via the default user (no username, no password) running at ```mongodb://localhost:27017``` by running ```mongosh ``` in the command prompt or powershell and then finding the database named ```chapdb``` with the collection ```transactions```. The Transaction details will be there. 
+------------------------
+------------------------
+
+You can connect to the running instance of MongoDB via the default user (no username, no password) running at ```mongodb://localhost:27017``` by running ```mongosh ``` in the command prompt or powershell and then finding the database named ```chapdb``` with the collection ```transactions```. The Transaction details will be saved there. 
 
 ### 4. Testing
 
@@ -114,3 +115,6 @@ The project includes unit tests for the API, gRPC service, and consumer. To run 
 ```bash
 dotnet test
 ```
+
+---end---
+-----
