@@ -1,10 +1,9 @@
 using ChapChap.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using ChapChap.Api.Extensions;
-using MassTransit;
 using ChapChap.Consumers;
 using ChapChap.Consumers.Extensions;
-using ChapChap.Consumers.Messages;
+using ChapChap.Api.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +16,11 @@ builder
 
 var massTransitOptions = new MassTransitOptions();
 builder.Configuration.Bind("MassTransit", massTransitOptions);
+
+builder
+    .Services
+    .AddSingleton(massTransitOptions)
+    .AddTransient<TransactionRequestService>();
 
 var consumersConfig = new ConsumersConfiguration();
 builder.Configuration.Bind("Consumers", consumersConfig);
@@ -40,39 +44,17 @@ app.UseHttpsRedirection();
 #endregion
 
 /// <summary>
-/// Minimal API endpoint to handle POST requests to "/example".
+/// Minimal API endpoint to handle POST requests to "/example."
 /// </summary>
 /// <param name="request">The request data sent by the client.</param>
 /// <returns>Returns an appropriate response based on the request.</returns>
 app.MapPost("/transactions", 
-async ([FromBody] TransactionRequest request, ILogger<Program> logger,
-    IBus massTransitBus ) =>
+async ([FromBody] TransactionRequest request, TransactionRequestService transactionRequestService,
+        ILogger<Program> logger) =>
 {
-    logger.LogInformation("Received {@TransactionRequest} with {ReferenceId} and {UserId}",
-        request, request.ReferenceId, request.UserId);
-
     try
     {
-        //vallidate incoming request
-        if (request.Amount <= 0)
-            return Results.BadRequest($"{nameof(request.Amount)} should be greater than 0");
-
-        //set up queue and send the request to consumer
-        var rabbitMqOptions = massTransitOptions.RabbitMQ ?? 
-            throw new ArgumentNullException(nameof(massTransitOptions.RabbitMQ));
-
-        var address = $"{rabbitMqOptions.Host}/{rabbitMqOptions.TransactionQueue}";
-
-        var endpoint = await massTransitBus.GetSendEndpoint(new Uri(address));
-
-        await endpoint.Send(new PaymentMessage
-        {
-            Amount = request.Amount,
-            ReferenceId = request.ReferenceId,
-            UserId = request.UserId
-        });
-
-        return Results.Ok("Transaction request queued for processing");                                                                                 
+        return await transactionRequestService.ProcessTransactionRequestAsync(request);                                                                    
     }
     catch (Exception ex)
     {
