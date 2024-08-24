@@ -5,7 +5,7 @@
     /// </summary>
     public class MassTransitOptions
     {
-        public RabbitMQ? RabbitMQ { get; set; }
+        public RabbitMQ RabbitMQ { get; set; } = null!;
     }
 
     public class RabbitMQ

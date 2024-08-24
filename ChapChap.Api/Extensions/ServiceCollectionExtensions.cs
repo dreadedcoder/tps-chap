@@ -26,9 +26,6 @@ namespace ChapChap.Api.Extensions
         public static IServiceCollection AddMassTransitConsumersWithRabbitMQ(
             this IServiceCollection services, MassTransitOptions mtOptions)
         {
-            if(mtOptions.RabbitMQ == null)
-                throw new ArgumentNullException(nameof(mtOptions.RabbitMQ));    
-
             services
                 .AddMassTransit(conf =>
                 {

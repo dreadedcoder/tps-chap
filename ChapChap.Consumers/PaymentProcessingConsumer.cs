@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using ChapChap.Payments;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
-using ChapChap.Consumers.gRPC;
 using ChapChap.Consumers.Data;
 using System;
+using ChapChap.Consumers.Services;
 
 namespace ChapChap.Consumers
 {
@@ -16,12 +16,12 @@ namespace ChapChap.Consumers
     public class PaymentProcessingConsumer : IConsumer<PaymentMessage>
     {
         private readonly ILogger<PaymentProcessingConsumer> _logger;
-        private readonly TransactionRepository _txnRepository;
-        private readonly PaymentClient _paymentClient;
+        private readonly ITransactionRepository _txnRepository;
+        private readonly IPaymentClient _paymentClient;
 
         public PaymentProcessingConsumer(
             ILogger<PaymentProcessingConsumer> logger,
-            TransactionRepository txnRepository, PaymentClient paymentClient)
+            ITransactionRepository txnRepository, IPaymentClient paymentClient)
         {
             _logger = logger;
             _txnRepository = txnRepository;

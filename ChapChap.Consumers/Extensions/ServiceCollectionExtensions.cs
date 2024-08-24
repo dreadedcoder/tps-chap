@@ -1,5 +1,6 @@
 ﻿using ChapChap.Consumers.Data;
 using ChapChap.Consumers.gRPC;
+using ChapChap.Consumers.Services;
 using Grpc.Net.Client;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
@@ -9,7 +10,7 @@ namespace ChapChap.Consumers.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Configures MongoDb, adds <see cref="TransactionRepository"/> and <see cref="PaymentClient"/>.
+        /// Configures MongoDb, adds <see cref="TransactionRepository"/> and <see cref="IPaymentClient"/>.
         /// </summary>
         /// 
         /// <param name="services"> The <see cref="IServiceCollection"/> instance. </param>
@@ -35,14 +36,12 @@ namespace ChapChap.Consumers.Extensions
                     provider.GetRequiredService<IMongoDatabase>().GetCollection<Transaction>(
                         mongoConfig.TransactionsCollectionName)
                 );
-            
-            //add other required services
-            services
-                .AddSingleton<TransactionRepository>()
-                .AddSingleton(GrpcChannel.ForAddress(config.ChannelAddress))
-                .AddSingleton<PaymentClient>();
 
-            return services;
+            //add other required services
+            return services
+                    .AddSingleton<ITransactionRepository, TransactionRepository>()
+                    .AddSingleton(GrpcChannel.ForAddress(config.ChannelAddress))
+                    .AddSingleton<IPaymentClient, PaymentClient>();
         }
     }
 }
